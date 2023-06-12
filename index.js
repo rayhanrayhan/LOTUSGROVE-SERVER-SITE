@@ -60,6 +60,14 @@ async function run() {
             res.send(result);
         });
 
+        //  dashboard delete data 
+        app.delete('/selectedClass/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const result = await selectedClasses.deleteOne(query)
+            res.send(result);
+        });
 
 
 
