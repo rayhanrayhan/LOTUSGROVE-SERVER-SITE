@@ -29,10 +29,15 @@ async function run() {
         await client.connect();
 
         const classesCollection = client.db("lotusGrove").collection("classes");
+        const extraClassCollection = client.db("lotusGrove").collection("extrasection");
 
 
         app.get('/classes', async (req, res) => {
             const result = await classesCollection.find().toArray()
+            res.send(result)
+        })
+        app.get('/extra', async (req, res) => {
+            const result = await extraClassCollection.find().toArray()
             res.send(result)
         })
 
