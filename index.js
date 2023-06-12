@@ -54,6 +54,13 @@ async function run() {
         });
 
 
+        // get this data clint site releted post method
+        app.get('/selectedClass', async (req, res) => {
+            const result = await selectedClasses.find().toArray();
+            res.send(result);
+        });
+
+
 
 
 
