@@ -35,19 +35,46 @@ async function run() {
             res.send(result);
         });
 
+
+        app.get('/classes/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const result = await classesCollection.find(query).toArray();
+            res.send(result);
+        });
+
         app.post('/classes', async (req, res) => {
             const newClass = req.body;
             const result = await classesCollection.insertOne(newClass);
             res.send(result);
         });
 
-        // email my class
-        app.get('/classes', async (req, res) => {
-            const email = req.query.email;
-            const result = await selectedClasses.find({ email }).toArray();
+        app.patch('/classes/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const updateStatus = req.body;
+            console.log(updateStatus)
+            const updateDoc = {
+                $set: {
+                    status: updateStatus.status,
+                }
+            };
+            const result = await classesCollection.updateOne(query, updateDoc);
             res.send(result);
         });
 
+        app.patch('/feedback/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const updateData = req.body;
+            const updateDoc = {
+                $set: {
+                    feedback: updateData.feedback
+                }
+            };
+            const result = await classesCollection.updateOne(query, updateDoc);
+            res.send(result);
+        });
 
         app.get('/extra', async (req, res) => {
             const result = await extraClassCollection.find().toArray();
