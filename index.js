@@ -35,6 +35,12 @@ async function run() {
             res.send(result);
         });
 
+        app.post('/classes', async (req, res) => {
+            const newClass = req.body;
+            const result = await classesCollection.insertOne(newClass);
+            res.send(result);
+        });
+
         app.get('/extra', async (req, res) => {
             const result = await extraClassCollection.find().toArray();
             res.send(result);
