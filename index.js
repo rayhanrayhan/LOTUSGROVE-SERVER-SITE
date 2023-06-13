@@ -41,6 +41,14 @@ async function run() {
             res.send(result);
         });
 
+        // email my class
+        app.get('/classes', async (req, res) => {
+            const email = req.query.email;
+            const result = await selectedClasses.find({ email }).toArray();
+            res.send(result);
+        });
+
+
         app.get('/extra', async (req, res) => {
             const result = await extraClassCollection.find().toArray();
             res.send(result);
