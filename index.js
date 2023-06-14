@@ -29,6 +29,7 @@ async function run() {
         const classesCollection = client.db("lotusGrove").collection("classes");
         const extraClassCollection = client.db("lotusGrove").collection("extrasection");
         const selectedClasses = client.db("lotusGrove").collection("selected_classes");
+        const usersCollection = client.db("lotusGrove").collection("users");
 
         app.get('/classes', async (req, res) => {
             const result = await classesCollection.find().toArray();
@@ -96,8 +97,10 @@ async function run() {
 
 
         // get this data clint site releted post method
-        app.get('/selectedClass', async (req, res) => {
-            const result = await selectedClasses.find().toArray();
+        app.get('/selectedClass/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await selectedClasses.find(query).toArray();
             res.send(result);
         });
 
@@ -107,6 +110,44 @@ async function run() {
             console.log(id)
             const query = { _id: new ObjectId(id) }
             const result = await selectedClasses.deleteOne(query)
+            res.send(result);
+        });
+
+        app.get('/users', async (req, res) => {
+            const result = await usersCollection.find().toArray();
+            res.send(result);
+        });
+
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            const email = newUser.email;
+            const query = { email: email };
+            const isExists = await usersCollection.findOne(query);
+            if (isExists) {
+                console.log('user already created')
+                return res.send({ message: 'user Already created' })
+            }
+            const result = await usersCollection.insertOne(newUser);
+            res.send(result);
+        });
+
+        app.patch('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const newRole = req.body;
+            const updateDoc = {
+                $set: {
+                    role: newRole.role
+                }
+            };
+            const result = await usersCollection.updateOne(query, updateDoc);
             res.send(result);
         });
 
