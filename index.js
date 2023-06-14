@@ -86,11 +86,6 @@ async function run() {
         //  send to clint side and receve to the server site 
         app.post('/selectedClass', async (req, res) => {
             const selectedClass = req.body;
-            const query = { classId: selectedClass.classId } //cheak dublicate
-            const isExists = await selectedClasses.findOne(query)
-            if (isExists) {
-                return res.send({ message: 'All Ready Exists' })
-            }
             const result = await selectedClasses.insertOne(selectedClass);
             res.send(result);
         });
