@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY)
 const port = process.env.PORT || 5000;
@@ -31,6 +32,13 @@ async function run() {
         const extraClassCollection = client.db("lotusGrove").collection("extrasection");
         const selectedClasses = client.db("lotusGrove").collection("selected_classes");
         const usersCollection = client.db("lotusGrove").collection("users");
+
+
+        app.post('/jwt', (req, res) => {
+            const user = req.body
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+            res.send({ token })
+        })
 
         app.get('/classes', async (req, res) => {
             const result = await classesCollection.find().toArray();
